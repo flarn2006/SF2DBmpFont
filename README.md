@@ -45,15 +45,15 @@ Draws a string on the screen. The string is drawn on a single line, even if it d
 
 ### drawStrWrap
 
-    u32 drawStrWrap(const std::string &str, int x, int y, u32 wrapWidth, u32 color = WHITE) const;
+    u32 drawStrWrap(const std::string &str, int x, int y, int wrapWidth, u32 color = WHITE) const;
 
 Draws a string on the screen. Word wrapping is performed to keep it at a maximum width of `wrapWidth` pixels. The return value is the **height** of the string in pixels. If `wrapWidth` is negative, wrapping will be performed at any character, regardless of word boundaries.
 
 ### getTextDims, getTextWidth, getTextHeight
 
-    void getTextDims(const std::string &str, u32 &width, u32 &height, u32 wrapWidth = 0) const;
-    u32 getTextWidth(const std::string &str, u32 wrapWidth = 0) const;
-    u32 getTextHeight(const std::string &str, u32 wrapWidth = 0) const;
+    void getTextDims(const std::string &str, u32 &width, u32 &height, int wrapWidth = 0) const;
+    u32 getTextWidth(const std::string &str, int wrapWidth = 0) const;
+    u32 getTextHeight(const std::string &str, int wrapWidth = 0) const;
 
 Calculates the width and height of a string as it would be drawn, without actually drawing it. If `wrapWidth` is specified and nonzero, the width and height are calculated according to how the string would be displayed by `drawStrWrap`.
 
