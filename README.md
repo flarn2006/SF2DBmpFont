@@ -16,6 +16,86 @@ The first step is to place BmpFont.cpp and BmpFont.h in your project's source di
     font.drawStr("Hello, world!", 8, 8, RGBA8(0x00, 0xFF, 0xFF, 0xFF));
     sf2d_end_frame();
 
-This will use the loaded font to display the text "Hello, world!" in cyan at the coordinates 8, 8. There are also other ways to draw text, such as with character- and word-wrapping, and clipping text to a certain rectangle. For now, look at the header file and the example program (main.cpp) for more information; traditional documentation has not yet been written. Sorry for the inconvenience.
+This will use the loaded font to display the text "Hello, world!" in cyan at the coordinates 8, 8. There are also other ways to draw text, such as with character- and word-wrapping, and clipping text to a certain rectangle.
 
-Note that while it is possible to manually free the memory used by a font by calling `BmpFont::free()`, you do not need to worry about doing so before the program exits, as it is automatically called by the destructor.
+## Functions
+
+The entire functionality of this library is contained within the BmpFont class. You draw text by calling member functions of this class. The following is a description of what each function does.
+
+### (constructors)
+
+    BmpFont();
+    BmpFont(const char *filename);
+    
+The default constructor creates the BmpFont object without loading a font. A font must be loaded (using the `load` function) before it can be used. Attempting to perform any action on a BmpFont object without a font loaded, except for loading a font or checking the status using `operator bool`, results in undefined behavior.
+
+If a filename is specified, a font will automatically be loaded upon creation. If an error occurs during loading, the result is the same as if no font was loaded. Use `operator bool` to check this.
+
+### drawChar
+
+    u8 drawChar(char ch, int x, int y, u32 color = WHITE) const;
+    
+Draws a single character on the screen, and returns the width of the character in pixels.
+
+### drawStr
+
+    u32 drawStr(const std::string &str, int x, int y, u32 color = WHITE) const;
+
+Draws a string on the screen. The string is drawn on a single line, even if it doesn't fit on the screen, unless the string contains explicit new-line (`\n`) characters. The return value is the **width** of the string in pixels.
+
+### drawStrWrap
+
+    u32 drawStrWrap(const std::string &str, int x, int y, u32 wrapWidth, u32 color = WHITE) const;
+
+Draws a string on the screen. Word wrapping is performed to keep it at a maximum width of `wrapWidth` pixels. The return value is the **height** of the string in pixels.
+
+### drawStrCharWrap
+
+    u32 drawStrCharWrap(const std::string &str, int x, int y, u32 wrapWidth, u32 color = WHITE) const;
+
+Identical to `drawStrWrap`, except wrapping is performed as soon as the maximum width is reached, regardless of word boundaries.
+
+### getTextDims
+
+    void getTextDims(const std::string &str, u32 &width, u32 &height, u32 wrapWidth = 0) const;
+
+Calculates the width and height of a string as it would be drawn, without actually drawing it. If `wrapWidth` is specified and greater than zero, the width and height are calculated according to how the string would be displayed by `drawStrCharWrap`.
+
+### clip, unclip
+
+    BmpFont &clip(int left, int top, int right, int bottom);
+    BmpFont &unclip();
+    
+After `clip` is called, any text drawn by this `BmpFont` object will be clipped to the given rectangle, cutting off anything not inside of it. Things like wrapping are unaffected; every pixel inside the rectangle is exactly as it would be if clipping was not being performed. This behavior will last until `clip` is called with different parameters, or `unclip` is called to disable clipping.
+
+These functions return a reference to the object it is called upon, so function calls can be chained.
+
+### isClipped
+
+    bool isClipped() const;
+
+Returns `true` if clip boundaries have been specified using the `clip` function, or `false` if clipping is disabled.
+
+### height
+
+    u32 height() const;
+
+Returns the height of a single line displayed using this font.
+
+### load
+
+    bool load(const char *filename);
+
+Loads a font. If a font is already loaded, `free` will be called automatically to unload the previous font. If successful, this function will return `true`. Otherwise, it will return `false` and the object will remain without a font loaded.
+
+### free
+
+    void free();
+
+Unloads the currently-loaded font and frees the memory associated with it. After this function is called, no font will be loaded, similar to if the object was created using the default constructor. Note that there is no need to call this function in most cases, as it is automatically called by the destructor.
+
+### operator bool
+
+    operator bool() const;
+
+Returns `true` if there is a font loaded, or `false` if not. This is the only way to check if a font was successfully loaded if it was loaded via the constructor, but generally this won't happen unless there's a problem with the font file.
