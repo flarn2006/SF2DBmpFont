@@ -12,6 +12,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #pragma once
 #include <string>
+#include <vector>
 #include <sf2d.h>
 
 enum TextAlignment { ALIGN_LEFT, ALIGN_CENTER, ALIGN_RIGHT };
@@ -28,6 +29,10 @@ private:
     u8 charWidths[256];
     
     static constexpr u32 WHITE = RGBA8(0xFF, 0xFF, 0xFF, 0xFF);
+    
+    void splitToLines(const std::string &str, std::vector<std::string> &lines, int wrapWidth) const;
+    u32 drawStrInternal(const std::string &str, int x, int y, u32 color) const;
+    u32 getLineWidth(const std::string &line) const;
 
 public:
     BmpFont();
@@ -37,11 +42,10 @@ public:
     bool load(const char *filename);
     u8 drawChar(char ch, int x, int y, u32 color = WHITE) const;
     u32 drawStr(const std::string &str, int x, int y, u32 color = WHITE) const;
-    u32 drawStrWrap(const std::string &str, int x, int y, u32 wrapWidth, u32 color = WHITE) const;
-    u32 drawStrCharWrap(const std::string &str, int x, int y, u32 wrapWidth, u32 color = WHITE) const;
-    void getTextDims(const std::string &str, u32 &width, u32 &height, u32 wrapWidth = 0) const;
-    u32 getTextWidth(const std::string &str, u32 wrapWidth = 0) const;
-    u32 getTextHeight(const std::string &str, u32 wrapWidth = 0) const;
+    u32 drawStrWrap(const std::string &str, int x, int y, int wrapWidth, u32 color = WHITE) const;
+    void getTextDims(const std::string &str, u32 &width, u32 &height, int wrapWidth = 0) const;
+    u32 getTextWidth(const std::string &str, int wrapWidth = 0) const;
+    u32 getTextHeight(const std::string &str, int wrapWidth = 0) const;
     void free();
     
     BmpFont &align(TextAlignment alignment);
