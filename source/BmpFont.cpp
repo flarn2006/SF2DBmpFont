@@ -16,19 +16,19 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 BmpFont::BmpFont()
 {
-	texture = nullptr;
+    texture = nullptr;
     unclip();
 }
 
 BmpFont::BmpFont(const char *filename)
     : BmpFont()
 {
-	load(filename);
+    load(filename);
 }
 
 BmpFont::~BmpFont()
 {
-	if (texture != nullptr) free();
+    if (texture != nullptr) free();
 }
 
 bool BmpFont::load(const char *filename)
@@ -202,33 +202,33 @@ u32 BmpFont::drawStrWrap(const std::string &str, int x, int y, u32 wrapWidth, u3
 
 u32 BmpFont::drawStrCharWrap(const std::string &str, int x, int y, u32 wrapWidth, u32 color) const
 {
-	u32 curX = 0;
-	u32 height = 0;
-	for (auto i = str.begin(); i != str.end(); ++i) {
-		unsigned char &uc = *(unsigned char *)&*i;
-		if (*i == '\n' || curX + charWidths[uc] > wrapWidth) {
-			curX = 0;
-			height += cellHeight;
-		}
-		if (*i != '\n') curX += drawChar(*i, x + curX, y + height, color);
-	}
-	return height + cellHeight;
+    u32 curX = 0;
+    u32 height = 0;
+    for (auto i = str.begin(); i != str.end(); ++i) {
+        unsigned char &uc = *(unsigned char *)&*i;
+        if (*i == '\n' || curX + charWidths[uc] > wrapWidth) {
+            curX = 0;
+            height += cellHeight;
+        }
+        if (*i != '\n') curX += drawChar(*i, x + curX, y + height, color);
+    }
+    return height + cellHeight;
 }
 
 void BmpFont::getTextDims(const std::string &str, u32 &width, u32 &height, u32 wrapWidth) const
 {
-	u32 curX = 0;
+    u32 curX = 0;
     width = 0;
-	height = cellHeight;
-	
+    height = cellHeight;
+    
     for (auto i = str.begin(); i != str.end(); ++i) {
         unsigned char &uc = *(unsigned char *)&*i;
-		if (wrapWidth > 0) {
-			if (curX + charWidths[uc] > wrapWidth) {
-				curX = 0;
-				height += cellHeight;
-			}
-		}
+        if (wrapWidth > 0) {
+            if (curX + charWidths[uc] > wrapWidth) {
+                curX = 0;
+                height += cellHeight;
+            }
+        }
         if (*i == '\n') {
             curX = 0;
             height += cellHeight;
@@ -278,5 +278,5 @@ BmpFont::operator bool() const
 
 u32 BmpFont::height() const
 {
-	return cellHeight;
+    return cellHeight;
 }

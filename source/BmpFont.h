@@ -22,19 +22,19 @@ class BmpFont
     unsigned char baseChar;
     int clipLeft, clipTop, clipRight, clipBottom;
     u8 charWidths[256];
-	
-	static constexpr u32 WHITE = RGBA8(0xFF, 0xFF, 0xFF, 0xFF);
+    
+    static constexpr u32 WHITE = RGBA8(0xFF, 0xFF, 0xFF, 0xFF);
     
 public:
-	BmpFont();
-	BmpFont(const char *filename);
-	~BmpFont();
-	
+    BmpFont();
+    BmpFont(const char *filename);
+    ~BmpFont();
+    
     bool load(const char *filename);
     u8 drawChar(char ch, int x, int y, u32 color = WHITE) const;
     u32 drawStr(const std::string &str, int x, int y, u32 color = WHITE) const;
     u32 drawStrWrap(const std::string &str, int x, int y, u32 wrapWidth, u32 color = WHITE) const;
-	u32 drawStrCharWrap(const std::string &str, int x, int y, u32 wrapWidth, u32 color = WHITE) const;
+    u32 drawStrCharWrap(const std::string &str, int x, int y, u32 wrapWidth, u32 color = WHITE) const;
     void getTextDims(const std::string &str, u32 &width, u32 &height, u32 wrapWidth = 0) const;
     void free();
     
@@ -43,8 +43,8 @@ public:
     bool isClipped() const;
     
     operator bool() const;
-	u32 height() const;
-	
-	BmpFont(const BmpFont &other) = delete;
-	const BmpFont &operator=(const BmpFont &other) = delete;
+    u32 height() const;
+    
+    BmpFont(const BmpFont &other) = delete;
+    const BmpFont &operator=(const BmpFont &other) = delete;
 };
