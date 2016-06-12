@@ -102,4 +102,4 @@ Unloads the currently-loaded font and frees the memory associated with it. After
 
     operator bool() const;
 
-Returns `true` if there is a font loaded, or `false` if not. This is the only way to check if a font was successfully loaded if it was loaded via the constructor, but generally this won't happen unless there's a problem with the font file.
+Returns `true` if there is a font loaded, or `false` if not. This is the only way to check if a font was successfully loaded if it was loaded via the constructor, but generally it won't fail unless there's a problem with the font file.
