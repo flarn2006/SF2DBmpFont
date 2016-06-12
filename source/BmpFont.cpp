@@ -153,7 +153,6 @@ u32 BmpFont::drawStrWrap(const std::string &str, int x, int y, u32 wrapWidth, u3
     std::vector<std::string> words;
     std::string curWord = "";
     u32 curX = 0;
-    u32 height = 0;
     
     for (auto i = str.begin(); i != str.end(); ++i) {
         u8 curCharWidth = charWidths[*(unsigned char *)&*i];
@@ -183,36 +182,61 @@ u32 BmpFont::drawStrWrap(const std::string &str, int x, int y, u32 wrapWidth, u3
     if (curWord.size() > 0)
         words.push_back(curWord);
     
+    std::vector<std::string> lines;
+    std::string curLine = "";
     curX = 0;
     
     for (auto i = words.begin(); i != words.end(); ++i) {
-        u32 width, h;
-        getTextDims(*i, width, h);
-        
+        u32 width = getTextWidth(*i);
         if (curX + width > wrapWidth || (*i)[0] == '\n') {
+            lines.push_back(curLine);
+            curLine = "";
             curX = 0;
-            height += cellHeight;
         }
         
-        curX += drawStr(*i, x + curX, y + height, color);
+        if ((*i)[0] != '\n') {
+            curLine += *i;
+            curX += width;
+        }
     }
     
-    return height + cellHeight;
+    if (curLine.size() > 0)
+        lines.push_back(curLine);
+    
+    for (std::size_t i=0; i<lines.size(); ++i) {
+        drawStr(lines[i], x, y+cellHeight*i, color);
+    }
+    
+    return lines.size() * cellHeight;
 }
 
 u32 BmpFont::drawStrCharWrap(const std::string &str, int x, int y, u32 wrapWidth, u32 color) const
 {
+    std::vector<std::string> lines;
+    std::string curLine;
     u32 curX = 0;
-    u32 height = 0;
+    
     for (auto i = str.begin(); i != str.end(); ++i) {
         unsigned char &uc = *(unsigned char *)&*i;
         if (*i == '\n' || curX + charWidths[uc] > wrapWidth) {
+            lines.push_back(curLine);
+            curLine = "";
             curX = 0;
-            height += cellHeight;
         }
-        if (*i != '\n') curX += drawChar(*i, x + curX, y + height, color);
+        if (*i != '\n') {
+            curLine += *i;
+            curX += charWidths[uc];
+        }
     }
-    return height + cellHeight;
+    
+    if (curLine.size() > 0)
+        lines.push_back(curLine);
+    
+    for (std::size_t i=0; i<lines.size(); ++i) {
+        drawStr(lines[i], x, y+cellHeight*i, color);
+    }
+    
+    return lines.size() * cellHeight;
 }
 
 void BmpFont::getTextDims(const std::string &str, u32 &width, u32 &height, u32 wrapWidth) const
@@ -237,6 +261,20 @@ void BmpFont::getTextDims(const std::string &str, u32 &width, u32 &height, u32 w
             if (curX > width) width = curX;
         }
     }
+}
+
+u32 BmpFont::getTextWidth(const std::string &str, u32 wrapWidth) const
+{
+    u32 width, height;
+    getTextDims(str, width, height, wrapWidth);
+    return width;
+}
+
+u32 BmpFont::getTextHeight(const std::string &str, u32 wrapWidth) const
+{
+    u32 width, height;
+    getTextDims(str, width, height, wrapWidth);
+    return height;
 }
 
 void BmpFont::free()

@@ -36,6 +36,8 @@ public:
     u32 drawStrWrap(const std::string &str, int x, int y, u32 wrapWidth, u32 color = WHITE) const;
     u32 drawStrCharWrap(const std::string &str, int x, int y, u32 wrapWidth, u32 color = WHITE) const;
     void getTextDims(const std::string &str, u32 &width, u32 &height, u32 wrapWidth = 0) const;
+    u32 getTextWidth(const std::string &str, u32 wrapWidth = 0) const;
+    u32 getTextHeight(const std::string &str, u32 wrapWidth = 0) const;
     void free();
     
     BmpFont &clip(int left, int top, int right, int bottom);
