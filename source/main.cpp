@@ -71,8 +71,17 @@ int main(int argc, char *argv[])
         longString += "And_this_word_is_very_long_and_cannot_be_displayed_on_a_single_line. This-is_how_hyphens_are_treated.\n                    ";
         std::string str = longString.substr(0, frame % (longString.size() + 1));
         
-        height = fixedsys.drawStrWrap(str, 0, 70, 320, RGBA8(0xFF, 0xFF, 0x00, 0xFF));
-        fixedsys.drawStr("That makes " + to_string(height / fixedsys.height()) + " line(s) total + this one.", 0, 70 + height, RGBA8(0xFF, 0xFF, 0x00, 0xFF));
+        int x = 0;
+        if (keys & KEY_L) {
+            fixedsys.align(ALIGN_CENTER);
+            x = 160;
+        } else if (keys & KEY_R) {
+            fixedsys.align(ALIGN_RIGHT);
+            x = 320;
+        }
+        
+        height = fixedsys.drawStrWrap(str, x, 70, 320, RGBA8(0xFF, 0xFF, 0x00, 0xFF));
+        fixedsys.align(ALIGN_LEFT).drawStr("That makes " + to_string(height / fixedsys.height()) + " line(s) total + this one.", 0, 70 + height, RGBA8(0xFF, 0xFF, 0x00, 0xFF));
         
         sf2d_draw_rectangle(0, 240 - times.height(), 320, times.height(), RGBA8(0xFF, 0xFF, 0xFF, 0xFF));
         times.drawStr("Variable-width fonts work well for small text as well.", 0, 240 - times.height(), RGBA8(0x00, 0x00, 0x00, 0xFF));

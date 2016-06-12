@@ -136,6 +136,12 @@ u32 BmpFont::drawStr(const std::string &str, int x, int y, u32 color) const
     u32 curX = 0;
     u32 width = 0;
     
+    if (alignment == ALIGN_RIGHT) {
+        x -= getTextWidth(str);
+    } else if (alignment == ALIGN_CENTER) {
+        x -= getTextWidth(str) / 2;
+    }
+    
     for (auto i = str.begin(); i != str.end(); ++i) {
         if (*i == '\n') {
             curX = 0;
@@ -281,6 +287,12 @@ void BmpFont::free()
 {
     sf2d_free_texture(texture);
     texture = nullptr;
+}
+
+BmpFont &BmpFont::align(TextAlignment alignment)
+{
+    this->alignment = alignment;
+    return *this;
 }
 
 BmpFont &BmpFont::clip(int left, int top, int right, int bottom)

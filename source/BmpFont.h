@@ -14,17 +14,21 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <string>
 #include <sf2d.h>
 
+enum TextAlignment { ALIGN_LEFT, ALIGN_CENTER, ALIGN_RIGHT };
+
 class BmpFont
-{
+{   
+private:
     sf2d_texture *texture;
     u32 imgWidth, imgHeight;
     u32 cellWidth, cellHeight;
     unsigned char baseChar;
+    TextAlignment alignment;
     int clipLeft, clipTop, clipRight, clipBottom;
     u8 charWidths[256];
     
     static constexpr u32 WHITE = RGBA8(0xFF, 0xFF, 0xFF, 0xFF);
-    
+
 public:
     BmpFont();
     BmpFont(const char *filename);
@@ -39,6 +43,8 @@ public:
     u32 getTextWidth(const std::string &str, u32 wrapWidth = 0) const;
     u32 getTextHeight(const std::string &str, u32 wrapWidth = 0) const;
     void free();
+    
+    BmpFont &align(TextAlignment alignment);
     
     BmpFont &clip(int left, int top, int right, int bottom);
     BmpFont &unclip();
