@@ -65,6 +65,12 @@ Calculates the width and height of a string as it would be drawn, without actual
 
 `getTextWidth` and `getTextHeight` are helper functions that call `getTextDims` and only return one of the values; use these if you don't need both dimensions.
 
+### align
+
+    BmpFont &align(TextAlignment alignment);
+
+Sets the alignment for text that will be drawn. Valid options for `alignment` are `ALIGN_LEFT` (the default), `ALIGN_CENTER`, and `ALIGN_RIGHT`. This affects `drawStr`, `drawStrWrap`, and `drawStrCharWrap`. With the default left alignment, text is printed to the right of the X position specified; with right alignment, it is printed to the left; with center alignment, it is printed on both sides.
+
 ### clip, unclip
 
     BmpFont &clip(int left, int top, int right, int bottom);
