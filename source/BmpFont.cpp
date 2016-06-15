@@ -136,12 +136,12 @@ void BmpFont::splitToLines(const std::string &str, std::vector<std::string> &lin
     if (wrapWidth == 0) {
         // No wrapping
         std::string curLine = "";
-        for (auto i = str.begin(); i != str.end(); ++i) {
-            if (*i == '\n') {
+        for (const auto &i : str) {
+            if (i == '\n') {
                 lines.push_back(curLine);
                 curLine = "";
             } else {
-                curLine += *i;
+                curLine += i;
             }
         }
         lines.push_back(curLine);
@@ -151,8 +151,8 @@ void BmpFont::splitToLines(const std::string &str, std::vector<std::string> &lin
         std::string curWord = "";
         u32 curX = 0;
 
-        for (auto i = str.begin(); i != str.end(); ++i) {
-            u8 curCharWidth = charWidths[(unsigned char)*i];
+        for (const auto &ch : str) {
+            u8 curCharWidth = charWidths[(unsigned char)ch];
             bool ignoreWhitespace = false;
 
             if (curX + curCharWidth > (unsigned)wrapWidth) {
@@ -162,16 +162,16 @@ void BmpFont::splitToLines(const std::string &str, std::vector<std::string> &lin
                 ignoreWhitespace = true;
             }
 
-            if ((!ignoreWhitespace || *i != ' ') && *i != '\n') {
-                curWord += *i;
+            if ((!ignoreWhitespace || ch != ' ') && ch != '\n') {
+                curWord += ch;
                 curX += curCharWidth;
             }
 
-            if (*i == ' ' || *i == '\n' || *i == '-') {
+            if (ch == ' ' || ch == '\n' || ch == '-') {
                 words.push_back(curWord);
                 curWord = "";
                 curX = 0;
-                if (*i == '\n')
+                if (ch == '\n')
                     words.push_back("\n");
             }
         }
@@ -182,17 +182,17 @@ void BmpFont::splitToLines(const std::string &str, std::vector<std::string> &lin
         std::string curLine = "";
         curX = 0;
 
-        for (auto i = words.begin(); i != words.end(); ++i) {
-            u32 curWidth = getLineWidth(*i);
+        for (const auto &word : words) {
+            u32 curWidth = getLineWidth(word);
 
-            if (curX + curWidth > (unsigned)wrapWidth || (*i)[0] == '\n') {
+            if (curX + curWidth > (unsigned)wrapWidth || word[0] == '\n') {
                 lines.push_back(curLine);
                 curLine = "";
                 curX = 0;
             }
 
-            if ((*i)[0] != '\n') {
-                curLine += *i;
+            if (word[0] != '\n') {
+                curLine += word;
                 curX += curWidth;
             }
         }
@@ -205,15 +205,15 @@ void BmpFont::splitToLines(const std::string &str, std::vector<std::string> &lin
         std::string curLine;
         u32 curX = 0;
 
-        for (auto i = str.begin(); i != str.end(); ++i) {
-            unsigned char uc = (unsigned char)*i;
-            if (*i == '\n' || curX + charWidths[uc] > (unsigned)wrapWidth) {
+        for (const auto &ch : str) {
+            unsigned char uc = ch;
+            if (ch == '\n' || curX + charWidths[uc] > (unsigned)wrapWidth) {
                 lines.push_back(curLine);
                 curLine = "";
                 curX = 0;
             }
-            if (*i != '\n') {
-                curLine += *i;
+            if (ch != '\n') {
+                curLine += ch;
                 curX += charWidths[uc];
             }
         }
@@ -233,8 +233,8 @@ u32 BmpFont::drawStrInternal(const std::string &str, int x, int y, u32 color) co
         x -= getTextWidth(str) / 2;
     }
 
-    for (auto i = str.begin(); i != str.end(); ++i) {
-        curX += drawChar(*i, x + curX, y, color);
+    for (const auto &ch : str) {
+        curX += drawChar(ch, x + curX, y, color);
         if (curX > width) width = curX;
     }
     return width;
@@ -270,8 +270,8 @@ u32 BmpFont::drawStrWrap(const std::string &str, int x, int y, int wrapWidth, u3
 u32 BmpFont::getLineWidth(const std::string &line) const
 {
     u32 width = 0;
-    for (auto i = line.begin(); i != line.end(); ++i) {
-        width += charWidths[(unsigned char)*i];
+    for (const auto &ch : line) {
+        width += charWidths[(unsigned char)ch];
     }
     return width;
 }
@@ -282,8 +282,8 @@ void BmpFont::getTextDims(const std::string &str, u32 &width, u32 &height, int w
     splitToLines(str, lines, wrapWidth);
 
     width = 0;
-    for (auto i = lines.begin(); i != lines.end(); ++i) {
-        u32 curWidth = getLineWidth(*i);
+    for (const auto &line : lines) {
+        u32 curWidth = getLineWidth(line);
         if (curWidth > width)
             width = curWidth;
     }
