@@ -11,6 +11,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 
 #include <cstdio>
+#include <sstream>
 #include "BmpFont.h"
 
 BmpFont::BmpFont()
@@ -135,20 +136,20 @@ void BmpFont::splitToLines(const std::string &str, std::vector<std::string> &lin
     lines.clear();
     if (wrapWidth == 0) {
         // No wrapping
-        std::string curLine = "";
-        for (const auto &i : str) {
-            if (i == '\n') {
-                lines.push_back(curLine);
-                curLine = "";
+        std::stringstream curLine;
+        for (const auto &ch : str) {
+            if (ch == '\n') {
+                lines.push_back(curLine.str());
+                curLine.str("");
             } else {
-                curLine += i;
+                curLine << ch;
             }
         }
-        lines.push_back(curLine);
+        lines.push_back(curLine.str());
     } else if (wrapWidth > 0) {
         // Word wrap
         std::vector<std::string> words;
-        std::string curWord = "";
+        std::stringstream curWord;
         u32 curX = 0;
 
         for (const auto &ch : str) {
@@ -156,69 +157,71 @@ void BmpFont::splitToLines(const std::string &str, std::vector<std::string> &lin
             bool ignoreWhitespace = false;
 
             if (curX + curCharWidth > (unsigned)wrapWidth) {
-                words.push_back(curWord);
-                curWord = "";
+                words.push_back(curWord.str());
+                curWord.str("");
                 curX = 0;
                 ignoreWhitespace = true;
             }
 
             if ((!ignoreWhitespace || ch != ' ') && ch != '\n') {
-                curWord += ch;
+                curWord << ch;
                 curX += curCharWidth;
             }
 
             if (ch == ' ' || ch == '\n' || ch == '-') {
-                words.push_back(curWord);
-                curWord = "";
+                words.push_back(curWord.str());
+                curWord.str("");
                 curX = 0;
                 if (ch == '\n')
                     words.push_back("\n");
             }
         }
 
-        if (curWord.size() > 0)
-            words.push_back(curWord);
+        std::string lastWord = curWord.str();
+        if (!lastWord.empty())
+            words.push_back(lastWord);
 
-        std::string curLine = "";
+        std::stringstream curLine;
         curX = 0;
 
         for (const auto &word : words) {
             u32 curWidth = getLineWidth(word);
 
             if (curX + curWidth > (unsigned)wrapWidth || word[0] == '\n') {
-                lines.push_back(curLine);
-                curLine = "";
+                lines.push_back(curLine.str());
+                curLine.str("");
                 curX = 0;
             }
 
             if (word[0] != '\n') {
-                curLine += word;
+                curLine << word;
                 curX += curWidth;
             }
         }
 
-        if (curLine.size() > 0)
-            lines.push_back(curLine);
+        std::string lastLine = curLine.str();
+        if (!lastLine.empty())
+            lines.push_back(lastLine);
     } else {
         // Character wrap
         wrapWidth = -wrapWidth;
-        std::string curLine;
+        std::stringstream curLine;
         u32 curX = 0;
 
         for (const auto &ch : str) {
             unsigned char uc = ch;
             if (ch == '\n' || curX + charWidths[uc] > (unsigned)wrapWidth) {
-                lines.push_back(curLine);
-                curLine = "";
+                lines.push_back(curLine.str());
+                curLine.str("");
                 curX = 0;
             }
             if (ch != '\n') {
-                curLine += ch;
+                curLine << ch;
                 curX += charWidths[uc];
             }
         }
 
-        lines.push_back(curLine);
+        lines.push_back(curLine.str());
     }
 }
 
