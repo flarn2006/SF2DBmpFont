@@ -42,6 +42,7 @@ bool BmpFont::load(const char *filename)
 
         if (temp[0] != 0xBF || temp[1] != 0xF2) {
             std::fclose(fp);
+            data.reset();
             return false;
         }
 
@@ -77,6 +78,7 @@ bool BmpFont::load(const char *filename)
             std::fread(texdata, 1, byteCount, fp);
         } else {
             std::fclose(fp);
+            data.reset();
             return false;
         }
 
@@ -87,6 +89,7 @@ bool BmpFont::load(const char *filename)
 
         return true;
     } else {
+        data.reset();
         return false;
     }
 }
