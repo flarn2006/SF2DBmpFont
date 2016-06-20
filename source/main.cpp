@@ -49,9 +49,9 @@ int main(int argc, char *argv[])
         sf2d_start_frame(GFX_TOP, GFX_LEFT);
         
         sf2d_draw_rectangle(frame % 140, frame % 140, 400 - 2*(frame % 140), 240 - 2*(frame % 140), RGBA8(0x00, 0x00, 0x00, 0xFF));
-        impact.clip(frame % 140, frame % 140, 400 - frame % 140, 240 - frame % 140);
-        impact.drawStr(clipclip, 6, 16, RGBA8(0xFF, 0x00, 0x00, 0xFF));
-        impact.unclip();
+        
+        const BmpFont &impact_const = impact;
+        impact_const.clip(frame % 140, frame % 140, 400 - frame % 140, 240 - frame % 140).drawStr(clipclip, 6, 16, RGBA8(0xFF, 0x00, 0x00, 0xFF));
         
         fixedsys.drawStr("Hello, world!", 5, 5, RGBA8(0x00, 0x00, 0x00, 0xFF));
         fixedsys.drawStr("Hello, world!", 4, 4, RGBA8(0x00, 0xFF, 0xFF, 0xFF));
