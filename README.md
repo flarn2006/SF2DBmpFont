@@ -8,7 +8,7 @@ While sftdlib uses vector-based TrueType font files, BmpFont loads raster-based 
 
 The first step is to place BmpFont.cpp and BmpFont.h in your project's source directory. Then put one or more .bff font files in a location accessible by the program, such as romfs. Let's say you use the fixedsys.bff font included in this example. To draw text using that font, all you need to do is this:
 
-    BmpFont font("fixedsys.bff"); //Load font file
+    BmpFont font("romfs:/fixedsys.bff"); //Load font file
     
     // ...
     
