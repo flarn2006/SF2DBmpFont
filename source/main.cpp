@@ -28,9 +28,11 @@ int main(int argc, char *argv[])
     BmpFont century("romfs:/century.bff");
     BmpFont times("romfs:/times.bff");
     
-    if (!impact || !fixedsys) {
+    if (!impact || !fixedsys || !century || !times) {
         sf2d_set_clear_color(RGBA8(0xFF, 0x00, 0x00, 0xFF));
     }
+
+	fixedsys.setTabWidth(80);
     
     unsigned int frame = 0;
     
@@ -69,7 +71,7 @@ int main(int argc, char *argv[])
         
         std::string longString = "This is a long string of text that will be wrapped to multiple lines.\nIt also contains a line break, which works as you would expect. ";
         longString += "And_this_word_is_very_long_and_cannot_be_displayed_on_a_single_line. This-is_how_hyphens_are_treated.\n                    ";
-        std::string str = longString.substr(0, frame % (longString.size() + 1));
+        std::string str = longString.substr(0, frame % (longString.size() + 1)) + "\t<-TAB";
         
         int x = 0;
         if (keys & KEY_L) {
@@ -89,7 +91,7 @@ int main(int argc, char *argv[])
         sf2d_end_frame();
         
         sf2d_swapbuffers();
-        ++frame;
+        if (!(keys & KEY_A)) ++frame;
     }
     
     sf2d_fini();
