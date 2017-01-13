@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
         sf2d_set_clear_color(RGBA8(0xFF, 0x00, 0x00, 0xFF));
     }
 
-	fixedsys.setTabWidth(80);
+    fixedsys.setTabWidth(80);
     
     unsigned int frame = 0;
     

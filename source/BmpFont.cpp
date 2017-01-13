@@ -239,10 +239,10 @@ u32 BmpFont::drawStrInternal(const std::string &str, int x, int y, u32 color) co
     }
 
     for (const auto &ch : str) {
-		if (ch == '\t')
-			curX = nextTabPos(curX);
-		else
-			curX += drawChar(ch, x + curX, y, color);
+        if (ch == '\t')
+            curX = nextTabPos(curX);
+        else
+            curX += drawChar(ch, x + curX, y, color);
         if (curX > width) width = curX;
     }
     return width;
@@ -250,13 +250,13 @@ u32 BmpFont::drawStrInternal(const std::string &str, int x, int y, u32 color) co
 
 u32 BmpFont::nextTabPos(u32 currentPos) const
 {
-	u32 newPos = currentPos;
-	if (newPos % tabWidth == 0)
-		newPos += tabWidth;
-	else
-		// Move ahead to the next multiple of tabWidth
-		newPos += tabWidth - newPos % tabWidth;
-	return newPos;
+    u32 newPos = currentPos;
+    if (newPos % tabWidth == 0)
+        newPos += tabWidth;
+    else
+        // Move ahead to the next multiple of tabWidth
+        newPos += tabWidth - newPos % tabWidth;
+    return newPos;
 }
 
 u32 BmpFont::drawStr(const std::string &str, int x, int y, u32 color) const
@@ -290,10 +290,10 @@ u32 BmpFont::getLineWidth(const std::string &line) const
 {
     u32 width = 0;
     for (const auto &ch : line) {
-		if (ch == '\t')
-			width = nextTabPos(width);
-		else
-			width += data->charWidths[(unsigned char)ch];
+        if (ch == '\t')
+            width = nextTabPos(width);
+        else
+            width += data->charWidths[(unsigned char)ch];
     }
     return width;
 }
@@ -387,20 +387,20 @@ bool BmpFont::isClipped() const
 
 BmpFont &BmpFont::setTabWidth(u32 width)
 {
-	tabWidth = width;
-	return *this;
+    tabWidth = width;
+    return *this;
 }
 
 BmpFont BmpFont::setTabWidth(u32 width) const
 {
-	BmpFont bf = *this;
-	bf.setTabWidth(width);
-	return bf;
+    BmpFont bf = *this;
+    bf.setTabWidth(width);
+    return bf;
 }
 
 u32 BmpFont::getTabWidth() const
 {
-	return tabWidth;
+    return tabWidth;
 }
 
 BmpFont::operator bool() const
